@@ -1,7 +1,7 @@
 {
-  "name": "package-a",
+  "name": "comms-udp",
   "version": "1.0.0",
-  "description": "Your Alpha package",
+  "description": "API for UDP communication with drones on the network",
   "scripts": {
     "build": "tsc && tsup",
     "lint": "eslint ./src --ext .ts",
@@ -11,7 +11,7 @@
   "repository": {
 		"type": "git",
 		"url": "https://github.com/lherlein/typescript-workspace-template.git",
-		"directory": "packages/package-a"
+		"directory": "packages/comms-udp"
 	},
   "files": [
     "dist",
@@ -24,13 +24,14 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "author": "",
+  "author": "Luca Herlein",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "zod": "3.23.8"
+    "zod": "3.23.8",
+    "tslog": "^4.9.3"
   },
   "devDependencies": {
     "tsup": "8.0.2",

@@ -6,11 +6,11 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "start:package-b": "sh -c 'npm --prefix packages/package-b run start > ./packages/package-b/logs/package-b-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>&1'"
+    "start:core": "sh -c 'npm --prefix packages/gs-core run start > ./packages/gs-core/logs/gs-core-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>&1'"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lherlein/typescript-workspace-template.git"
+    "url": "git+https://github.com/lherlein/ts-ground-station.git"
   },
   "keywords": [],
   "workspaces": [
@@ -22,9 +22,5 @@
     "tsup": "^8.0.2",
     "typescript": "^5.4.3",
     "concurrently": "^6.3.0"
-  },
-  "bugs": {
-    "url": "https://github.com/lherlein/typescript-workspace-template/issues"
-  },
-  "homepage": "https://github.com/lherlein/typescript-workspace-template#readme"
+  }
 }

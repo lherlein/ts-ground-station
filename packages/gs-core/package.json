@@ -1,7 +1,7 @@
 {
-  "name": "package-b",
+  "name": "gs-core",
   "version": "1.0.0",
-  "description": "Your Beta Package",
+  "description": "Ground Station Core API",
   "scripts": {
     "build": "tsc && tsup",
     "lint": "eslint ./src --ext .ts",
@@ -11,7 +11,7 @@
   "repository": {
 		"type": "git",
 		"url": "https://github.com/lherlein/typescript-workspace-template.git",
-		"directory": "packages/package-b"
+		"directory": "packages/ground-station-core"
 	},
   "files": [
     "dist",
@@ -30,7 +30,8 @@
   "modules": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "zod": "3.23.8"
+    "zod": "3.23.8",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "tsup": "8.0.2",
