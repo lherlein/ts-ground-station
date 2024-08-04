@@ -25,6 +25,7 @@ export interface CommsServiceInterface {
   sendKill(): Promise<void>;
   sendUpdateControl(controlParams: UpdateControlPayload): Promise<void>;
   sendStateChange(input: DroneStates): Promise<void>;
+  listenUDPMessage(): Promise<string>;
 }
 
 export type CommsServiceInterfacePayload = {

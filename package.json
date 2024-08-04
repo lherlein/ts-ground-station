@@ -1,12 +1,14 @@
 {
-  "name": "ts-monorepo-template",
+  "name": "ts-ground-station",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ground Station Software controlling drones on a network",
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "start:core": "sh -c 'npm --prefix packages/gs-core run start > ./packages/gs-core/logs/gs-core-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>&1'"
+    "start:core": "sh -c 'npm --prefix packages/gs-core run start > ./packages/gs-core/logs/gs-core-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>&1'",
+    "start:udp-service": "sh -c 'npm --prefix packages/udp-service run start > ./packages/udp-service/logs/udp-service-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>&1'",
+    "start": "concurrently \"npm run start:core\" \"npm run start:udp-service\""
   },
   "repository": {
     "type": "git",

@@ -25,6 +25,11 @@ export class commsService implements CommsServiceInterface {
     }
   }
 
+  async listenUDPMessage(): Promise<string> {
+    const response = await listenUDPMessage(this.opts.address, this.opts.port);
+    return response;
+  }
+ 
   async verifyConnection(): Promise<boolean> {
     // Ping IP address, return true if any response
 
