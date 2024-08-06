@@ -31,7 +31,8 @@
   "types": "./dist/index.d.ts",
   "dependencies": {
     "zod": "3.23.8",
-    "tslog": "^4.9.3"
+    "tslog": "^4.9.3",
+    "ping": "^0.4.4"
   },
   "devDependencies": {
     "tsup": "8.0.2",

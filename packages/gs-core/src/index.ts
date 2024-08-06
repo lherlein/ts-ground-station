@@ -71,20 +71,24 @@ app.post('/kill', async (req, res) => {
 app.post('/updateControl', async (req, res) => {
   const newParams = req.body;
   controlParams = {
-    gyroX: newParams.gyroX || controlParams.gyroX,
-    gyroY: newParams.gyroY || controlParams.gyroY,
-    gyroZ: newParams.gyroZ || controlParams.gyroZ,
-    Z: newParams.Z || controlParams.Z,
+    gyroX: newParams.payload.gyroX || controlParams.gyroX,
+    gyroY: newParams.payload.gyroY || controlParams.gyroY,
+    gyroZ: newParams.payload.gyroZ || controlParams.gyroZ,
+    Z: newParams.payload.Z || controlParams.Z,
   };
+  console.log(controlParams);
 
   await comms.sendUpdateControl(controlParams);
   res.status(200).send('Updated control');
 });
 
 app.post('/stateChange', async (req, res, next) => {
-  const state = req.body;
+  const payload = req.body;
+  if (!['FLY', 'STANDBY'].includes(payload.state)) {
+    res.status(400).send('Invalid state');
+  }
   try {
-    await comms.sendStateChange(state.state);
+    await comms.sendStateChange(payload.state);
     res.status(200).send('State changed');
   } catch (e) {
     next(e);
@@ -92,7 +96,7 @@ app.post('/stateChange', async (req, res, next) => {
 });
 
 app.get('/control', (req, res) => {
-  res.status(200).send(controlParams);
+  res.status(200).send(controlParams); // currently unsynced
 });
 
 app.get('/statevec', (req, res) => {

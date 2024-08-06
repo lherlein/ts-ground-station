@@ -17,45 +17,53 @@ const comms = new commsService({
 // Listen for UDP messages, parse and send to the core server
 
 async function listener(): Promise<void> {
-  const response = await comms.listenUDPMessage();
-  console.log(response);
+  try {
+    const response = await comms.listenUDPMessage();
+    console.log(response);
 
-  // Parse response and send to core server
-  // Incoming string: data_package = 
-  /*
-  {
-    "type": "IMU_DATA",
-    "payload": {
-      "accel": imuData[0],
-      "gyro": imuData[1]
+    // Parse response and send to core server
+    // Incoming string: data_package = 
+    /*
+    {
+      "type": "IMU_DATA",
+      "payload": {
+        "accel": imuData[0],
+        "gyro": imuData[1]
+      }
     }
-  }
-  */
+    */
 
-  // Parse response
-  const data_package = JSON.parse(response);
-  const type = data_package.type;
-  if (type === 'IMU_DATA') {
-    const imuData = data_package.payload;
-    let updateCorePayload: DroneInfo = {
-      u_dot: imuData.accel[0],
-      v_dot: imuData.accel[1],
-      w_dot: imuData.accel[2],
-      p: imuData.gyro[0],
-      q: imuData.gyro[1],
-      r: imuData.gyro[2],
-    };
-    console.log(updateCorePayload);
+    // Parse response
+    const data_package = JSON.parse(response);
+    const type = data_package.type;
+    if (type === 'IMU_DATA') {
+      const imuData = data_package.payload;
+      let updateCorePayload: DroneInfo = {
+        u_dot: imuData.accel[0],
+        v_dot: imuData.accel[1],
+        w_dot: imuData.accel[2],
+        p: imuData.gyro[0],
+        q: imuData.gyro[1],
+        r: imuData.gyro[2],
+      };
+      console.log(updateCorePayload);
 
-    // Send to core server
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updateCorePayload),
-    };
-    await fetch('http://localhost:3000/update', requestOptions);
-  } else {
-    console.log('Invalid data package type');
+      // Send to core server
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateCorePayload),
+      };
+      await fetch('http://localhost:3000/update', requestOptions);
+    } else {
+      console.log('Invalid data package type');
+    }
+  } catch (error) {
+    if (error.code === 'EADDRNOTAVAIL' || error == 'CANNOT ESTABLISH CONNECTION') {
+      //pass
+    } else {
+      console.log(error); //crash
+    }
   }
 
   // Repeat

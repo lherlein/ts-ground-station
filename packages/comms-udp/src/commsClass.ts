@@ -12,6 +12,8 @@ import {
   DroneStates,
 } from './types'
 
+import * as ping from 'ping';
+
 export class commsService implements CommsServiceInterface {
   opts: {
     address: string;
@@ -26,14 +28,28 @@ export class commsService implements CommsServiceInterface {
   }
 
   async listenUDPMessage(): Promise<string> {
-    const response = await listenUDPMessage(this.opts.address, this.opts.port);
-    return response;
+    const connected = await this.verifyConnection();
+    if (connected) {
+      let response = await listenUDPMessage(this.opts.address, this.opts.port);
+      return response;
+    } else {
+      throw new Error('CANNOT ESTABLISH CONNECTION');
+    }
+    
   }
  
   async verifyConnection(): Promise<boolean> {
     // Ping IP address, return true if any response
-
-    return true;
+    try {
+      const res = await ping.promise.probe(this.opts.address);
+      if (res.alive) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
   }
 
   async sendKill(): Promise<void> {
