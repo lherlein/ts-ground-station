@@ -10,7 +10,7 @@
   },
   "repository": {
 		"type": "git",
-		"url": "https://github.com/lherlein/typescript-workspace-template.git",
+		"url": "https://github.com/lherlein/ts-ground-station.git",
 		"directory": "packages/udp-service"
 	},
   "files": [
@@ -31,7 +31,8 @@
   "types": "./dist/index.d.ts",
   "dependencies": {
     "zod": "3.23.8",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "axios": "^1.7.3"
   },
   "devDependencies": {
     "tsup": "8.0.2",

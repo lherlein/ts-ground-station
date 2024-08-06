@@ -1,7 +1,8 @@
 import { commsService } from 'comms-udp';
 import express from 'express';
 import { Logger } from 'tslog';
-import { DroneInfo, DroneStateVector } from '../../udp-service/src/types';
+import { DroneInfo, DroneStateVector } from './types';
+import path from 'path';
 
 // Core server, exposing APIs that use the comms-udp package
 
@@ -54,32 +55,51 @@ app.use((req,res,next) => {
   logger.info(`${req.method} request from ${req.ip} to ${req.url}`);
   next();
 }); // Middleware to log requests
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 
 app.get('/', (req, res) => {
-  res.status(200).send('Hello World!'); // will be replaced with a UI
+  res.sendFile(path.join(__dirname, '..', 'src', 'public', 'index.html'));
 });
 
 app.post('/kill', async (req, res) => {
   // Send kill UDP command 10 times over 2 seconds
   for (let i = 0; i < 10; i++) {
-    await comms.sendKill();
+    try {
+      await comms.sendKill();
+    } catch (e) {
+      i = 0; // don't let loop stop!!! 
+    }
     await new Promise((resolve) => setTimeout(resolve, 200));
   }
   res.status(200).send('Killed drone');
 });
 
-app.post('/updateControl', async (req, res) => {
+app.post('/updateControl', async (req, res, next) => {
   const newParams = req.body;
+  console.log(newParams);
+  
+  if (newParams.payload.gyroX == null || newParams.payload.gyroY == null || newParams.payload.gyroZ == null || newParams.payload.Z == null) {
+    res.status(400).send('Invalid control parameters');
+  }
+
   controlParams = {
-    gyroX: newParams.payload.gyroX || controlParams.gyroX,
-    gyroY: newParams.payload.gyroY || controlParams.gyroY,
-    gyroZ: newParams.payload.gyroZ || controlParams.gyroZ,
-    Z: newParams.payload.Z || controlParams.Z,
-  };
+    gyroX: newParams.payload.gyroX,
+    gyroY: newParams.payload.gyroY,
+    gyroZ: newParams.payload.gyroZ,
+    Z: newParams.payload.Z,
+  }; // Store locally for now, will be synced with the drone later
   console.log(controlParams);
 
-  await comms.sendUpdateControl(controlParams);
-  res.status(200).send('Updated control');
+  try {
+    await comms.sendUpdateControl(controlParams);
+  } catch (e) {
+    next(e);
+  }
+  try {
+    res.status(200).send('Updated control');
+  } catch (e) {
+    next(e); // hack for now
+  }
 });
 
 app.post('/stateChange', async (req, res, next) => {

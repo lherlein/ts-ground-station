@@ -4,7 +4,7 @@
 
 import { commsService } from 'comms-udp';
 import { DroneInfo } from './types';
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 const droneIp = `192.168.2.124`; // IP address of the drone
 const UDPport = 5005; // Port to send UDP messages
@@ -49,12 +49,12 @@ async function listener(): Promise<void> {
       console.log(updateCorePayload);
 
       // Send to core server
-      const requestOptions = {
-        method: 'POST',
+      await axios({
+        method: 'post',
+        url: 'http://localhost:3000/update',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updateCorePayload),
-      };
-      await fetch('http://localhost:3000/update', requestOptions);
+        data: JSON.stringify(updateCorePayload),
+      });
     } else {
       console.log('Invalid data package type');
     }
